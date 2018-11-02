@@ -29,7 +29,7 @@ namespace Api
             services.AddMvc();
 
 
-            var connection = @"Server=Persist Security Info=True;Data Source=SBDUOL-cltdb020,1433;Initial Catalog=pubdb_home_hml;User ID=srv.home_hml;Password=4giO9LuqIs0v;Connect Timeout=120;";
+            var connection = @"Server=Persist Security Info=True;Data Source=localhost,1433;Initial Catalog=db_futebol;User ID=sa;Password=yourStrong(!)Password;Connect Timeout=120;";
             services.AddDbContext<DataContext>
                 (options => options.UseSqlServer(connection));
         }
