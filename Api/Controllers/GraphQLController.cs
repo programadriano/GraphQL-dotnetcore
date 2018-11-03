@@ -25,14 +25,14 @@ namespace Api.Controllers
         {
             var inputs = query.Variables.ToInputs();
 
-            //var schema = new Schema()
-            //{
-            //    Query = new EatMoreQuery(_db)
-            //};
+            var schema = new Schema()
+            {
+                Query = new EatMoreQuery(_db)
+            };
 
             var result = await new DocumentExecuter().ExecuteAsync(_ =>
             {
-                //  _.Schema = schema;
+                _.Schema = schema;
                 _.Query = query.Query;
                 _.OperationName = query.OperationName;
                 _.Inputs = inputs;

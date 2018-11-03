@@ -48,6 +48,13 @@ namespace Api.Models
             SqlConnection conexao = new SqlConnection(_connection);
             conexao.Open();
             var vm = conexao.Query<Leaderboard>("select * from Leaderboard where Deletado = 0").ToList();
+
+            foreach (var item in vm)
+            {
+                item.LeaderboardGroupInfo = conexao.Query<LeaderboardGroupInfo>("select * from LeaderboardGroupInfo where leaderboardId = @id and Deletado = 0 ", new { id = item.Id }).ToList();
+            }
+
+            conexao.Close();
             return vm;
         }
 

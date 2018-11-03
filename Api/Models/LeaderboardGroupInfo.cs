@@ -7,7 +7,7 @@ namespace Api.Models
 {
     public class LeaderboardGroupInfo : BaseEntity
     {
-        
+        public Team Team { get; set; }
         public int TeamId { get; set; }
         public int LeaderboardId { get; set; }
         public int Position { get; set; }
