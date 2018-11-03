@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api.Infra;
+using Api.Models;
 using GraphiQl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,13 +26,27 @@ namespace Api
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {       
+
+            #region [Services]
+            services.AddScoped<ChampionshipMatchesService>();
+            services.AddScoped<ChampionshipService>();
+            services.AddScoped<LeaderboardGroupInfoService>();
+            services.AddScoped<LeaderboardService>();
+            services.AddScoped<TeamService>();
+            #endregion
+
+            #region [cors]
+            services.AddCors();
+            #endregion
+
             services.AddMvc();
 
+            #region [EntityFramework]
+            var connection = Configuration.GetSection("SQLConnection:ConnectionString").Value;
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connection));
+            #endregion
 
-            var connection = @"Server=Persist Security Info=True;Data Source=localhost,1433;Initial Catalog=db_futebol;User ID=sa;Password=yourStrong(!)Password;Connect Timeout=120;";
-            services.AddDbContext<DataContext>
-                (options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +58,16 @@ namespace Api
             }
 
             app.UseGraphiQl();
+
+            #region [Cors]
+            app.UseCors(x =>
+            {
+                x.AllowAnyHeader();
+                x.AllowAnyMethod();
+                x.AllowAnyOrigin();
+            });
+            #endregion
+
             app.UseMvc();
         }
     }

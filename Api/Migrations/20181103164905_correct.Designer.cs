@@ -4,14 +4,16 @@ using Api.Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20181103164905_correct")]
+    partial class correct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,9 +115,13 @@ namespace Api.Migrations
 
                     b.Property<bool>("Deletado");
 
+                    b.Property<int?>("TeamId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChampionshipId");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Leaderboard");
                 });
@@ -210,6 +216,10 @@ namespace Api.Migrations
                         .WithMany("Leaderboard")
                         .HasForeignKey("ChampionshipId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Api.Models.Team")
+                        .WithMany("Leaderboard")
+                        .HasForeignKey("TeamId");
                 });
 
             modelBuilder.Entity("Api.Models.LeaderboardGroupInfo", b =>

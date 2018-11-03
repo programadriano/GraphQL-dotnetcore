@@ -11,23 +11,13 @@ namespace Api.Infra
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
+            
+        }       
 
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Campeonato>()
-                .HasKey(p => p.Id);
-
-            modelBuilder.Entity<Times>()
-                 .HasKey(p => p.Id);
-
-            modelBuilder.Entity<Jogadores>()
-            .HasKey(p => p.Id);
-        }
-
-        public DbSet<Campeonato> Campeonato { get; set; }
-        public DbSet<Times> Times { get; set; }
-        public DbSet<Jogadores> Jogadores { get; set; }
+        public DbSet<Championship> Championship { get; set; }
+        public DbSet<ChampionshipMatches> ChampionshipMatches { get; set; }
+        public DbSet<Leaderboard> Leaderboard { get; set; }
+        public DbSet<LeaderboardGroupInfo> LeaderboardGroupInfo { get; set; }
+        public DbSet<Team> Team { get; set; }
     }
 }

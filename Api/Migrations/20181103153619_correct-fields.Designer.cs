@@ -4,14 +4,16 @@ using Api.Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20181103153619_correct-fields")]
+    partial class correctfields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,9 +50,9 @@ namespace Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AwaPenaltyScore");
+                    b.Property<string>("AwaPenaltyScore");
 
-                    b.Property<int>("AwayScore");
+                    b.Property<string>("AwayScore");
 
                     b.Property<string>("AwayTeamInitials");
 
@@ -66,11 +68,11 @@ namespace Api.Migrations
 
                     b.Property<bool>("Deletado");
 
-                    b.Property<string>("DetailedDate");
+                    b.Property<DateTime>("DetailedDate");
 
-                    b.Property<int>("HomePenaltyScore");
+                    b.Property<string>("HomePenaltyScore");
 
-                    b.Property<int>("HomeScore");
+                    b.Property<string>("HomeScore");
 
                     b.Property<string>("HomeTeamInitials");
 
@@ -113,9 +115,13 @@ namespace Api.Migrations
 
                     b.Property<bool>("Deletado");
 
+                    b.Property<int?>("TeamId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChampionshipId");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Leaderboard");
                 });
@@ -210,6 +216,10 @@ namespace Api.Migrations
                         .WithMany("Leaderboard")
                         .HasForeignKey("ChampionshipId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Api.Models.Team")
+                        .WithMany("Leaderboard")
+                        .HasForeignKey("TeamId");
                 });
 
             modelBuilder.Entity("Api.Models.LeaderboardGroupInfo", b =>
