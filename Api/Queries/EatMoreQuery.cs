@@ -11,17 +11,6 @@ namespace Api.Queries
     {
         public EatMoreQuery(DataContext db)
         {
-            //GetAll
-            Field<ListGraphType<CampeonatoType>>(
-                "Championships",
-                resolve: context =>
-                {
-                    var campeonatos = db
-                    .Championship
-                    .Include("ChampionshipMatches")
-                    .Include("Leaderboard");
-                    return campeonatos;
-                });
 
             //GetByID
             Field<CampeonatoType>(
@@ -38,6 +27,59 @@ namespace Api.Queries
                         .FirstOrDefault(i => i.Id == id);
                     return campeonato;
                 });
+
+
+            //GetAll
+            Field<ListGraphType<CampeonatoType>>(
+                "Championships",
+                resolve: context =>
+                {
+                    var campeonatos = db
+                    .Championship
+                    .Include("ChampionshipMatches")
+                    .Include("Leaderboard");
+                    return campeonatos;
+                });
+
+
+            //ChampionshipMatches
+            Field<ListGraphType<ChampionshipMatchesType>>(
+                 "ChampionshipMatches",
+                 arguments: new QueryArguments(
+                    new QueryArgument<IdGraphType> { Name = "pagina" },
+                    new QueryArgument<IdGraphType> { Name = "quantidade" }
+                    ),
+                 resolve: context =>
+                 {
+                     var championshipMatches = db.ChampionshipMatches.OrderBy(x => x.Date);
+
+
+                     if (context.Arguments.Count() > 0)
+                     {
+                         if (context.Arguments["pagina"] != null && context.Arguments["quantidade"] != null)
+                         {
+
+                             var pagina = context.GetArgument("pagina", int.MaxValue);
+
+                             var qtd = context.GetArgument("quantidade", int.MaxValue);
+
+                             return championshipMatches
+                                  .Skip(pagina * qtd)
+                                  .Take(qtd);
+
+                         }
+
+                         return championshipMatches.Take(10);
+
+                     }
+                     else
+                     {
+                         return championshipMatches.Take(10);
+                     }
+
+
+                 });
+
 
 
         }
